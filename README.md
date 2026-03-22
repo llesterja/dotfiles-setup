@@ -73,7 +73,25 @@ doctor
 - **`bootstrap.sh`** — Installs Homebrew (if needed), sets up PATH, and generates `config/git/gitconfig` from the template if it doesn’t exist.
 - **`install.sh`** — Runs `brew bundle`, installs Oh My Zsh, symlinks `.zshrc`, `.gitconfig`, `.gitignore_global`, and installs Node LTS via nvm.
 - **`exec zsh`** — Reloads your shell so the new config is active.
-- **`doctor`** — Checks that brew, git, node, nvm, fzf, autojump, Oh My Zsh, and symlinks are present.
+- **`doctor`** — Checks that brew, git, node, nvm, fzf, autojump, Oh My Zsh, and symlinks are present. After `exec zsh`, `doctor` is on your `PATH` (via `config/zsh/exports.zsh`). In **bash**, run `~/dotfiles/bin/doctor` (or add `~/dotfiles/bin` to `PATH`).
+
+**Linux / WSL:** macOS already ships **zsh**; on Ubuntu/WSL you need a zsh binary before Oh My Zsh works. The Brewfile includes **`zsh`** so `brew bundle` installs it. If **`./install.sh` stops early** because `brew bundle` failed, nothing after that runs — including Oh My Zsh and the **`~/.zshrc` symlink**. Fix the bundle errors (or install missing formulae), then run **`./install.sh` again**. To repair only shell setup after `brew bundle` succeeds:
+
+```bash
+brew install zsh   # skip if already installed via brew bundle
+RUNZSH=no CHSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+~/dotfiles/bin/link ~/dotfiles/config/zsh/zshrc ~/.zshrc
+```
+
+**Bash and .NET:** `dotnet` comes from Homebrew’s **`dotnet@8`** formula. Your **zsh** config loads it via `config/shell/dotnet-homebrew.sh` (sourced from `exports.zsh`). In **bash**, Homebrew and .NET are not on `PATH` until you load them — for example:
+
+```bash
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv bash)"
+export DOTFILES="$HOME/dotfiles"
+source "$DOTFILES/config/shell/dotnet-homebrew.sh"
+```
+
+Then `dotnet --version` should print the SDK version. If it still fails, install the formula: `brew install dotnet@8`.
 
 ---
 

@@ -1,4 +1,5 @@
 brew "git"
+brew "zsh"
 brew "fzf"
 brew "ripgrep"
 brew "bat"

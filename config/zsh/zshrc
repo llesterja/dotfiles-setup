@@ -13,7 +13,9 @@ fi
 
 if [[ -x /opt/homebrew/bin/brew ]]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
-else
+elif [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+elif [[ -x /usr/local/bin/brew ]]; then
   eval "$(/usr/local/bin/brew shellenv)"
 fi
 
@@ -25,7 +27,3 @@ source "$DOTFILES/config/zsh/plugins.zsh"
 
 # opencode
 export PATH=/Users/admin/.opencode/bin:$PATH
-
-# .NET 8 (keg-only; path set so tools can find dotnet)
-export DOTNET_ROOT="${HOMEBREW_PREFIX:-/opt/homebrew}/opt/dotnet@8/libexec"
-export PATH="$DOTNET_ROOT:$PATH"
